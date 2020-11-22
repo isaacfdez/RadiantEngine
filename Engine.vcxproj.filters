@@ -135,6 +135,9 @@
     </ClCompile>
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="ModuleProgram.cpp" />
+    <ClCompile Include="DebugDraw\ModuleDebugDraw.cpp">
+      <Filter>DebugDraw</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -373,10 +376,22 @@
       <Filter>MathGeoLib</Filter>
     </ClInclude>
     <ClInclude Include="ModuleProgram.h" />
+    <ClInclude Include="DebugDraw\debug_draw.hpp">
+      <Filter>DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDraw\debugdraw.h">
+      <Filter>DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDraw\ModuleDebugDraw.h">
+      <Filter>DebugDraw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
       <UniqueIdentifier>{1e89a13f-23de-4385-8e81-8634b2e02088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugDraw">
+      <UniqueIdentifier>{762b7b95-ebd1-4057-9e0a-fb105816ec10}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

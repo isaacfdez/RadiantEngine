@@ -33,17 +33,17 @@ public:
 
 	KeyState GetMouseButtonDown(int button) const
 	{
-		return mouse_buttons[button - 1];
+		return mouseButtons[button - 1];
 	}
 
 	const float GetMouseWheelMotion() const
 	{
-		return mouse_wheel_motion;
+		return mouseWheelMotion;
 	}
 
 	const float2& GetMouseMotion() const
 	{
-		return mouse_motion;
+		return mouseMotion;
 	}
 
 	const float2& GetMousePosition() const
@@ -53,8 +53,8 @@ public:
 
 private:
 	KeyState keyboard[NUM_KEYS];
-	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];
-	float mouse_wheel_motion = 0;
-	float2 mouse_motion = { 0, 0 };
+	KeyState mouseButtons[NUM_MOUSE_BUTTONS];
+	float mouseWheelMotion = 0;
+	float2 mouseMotion = { 0, 0 };
 	float2 mouse = { 0, 0 };
 };

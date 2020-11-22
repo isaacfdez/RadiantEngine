@@ -8,7 +8,7 @@
 ModuleInput::ModuleInput()
 {
 	memset(keyboard, KEY_IDLE, sizeof(KeyState) * NUM_KEYS);
-	memset(mouse_buttons, KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
+	memset(mouseButtons, KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
 }
 
 ModuleInput::~ModuleInput() {}
@@ -32,14 +32,14 @@ update_status ModuleInput::PreUpdate()
 {
 	SDL_Event event;
 
-	mouse_motion = { 0, 0 };
-	mouse_wheel_motion = 0;
+	mouseMotion = { 0, 0 };
+	mouseWheelMotion = 0;
 
 	int mouse_x;
 	int mouse_y;
 	SDL_GetMouseState(&mouse_x, &mouse_y);
-	mouse_motion.x = mouse_x - mouse.x;
-	mouse_motion.y = mouse_y - mouse.y;
+	mouseMotion.x = mouse_x - mouse.x;
+	mouseMotion.y = mouse_y - mouse.y;
 	mouse.x = mouse_x;
 	mouse.y = mouse_y;
 
@@ -65,11 +65,11 @@ update_status ModuleInput::PreUpdate()
 
 	for (int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
 	{
-		if (mouse_buttons[i] == KEY_DOWN)
-			mouse_buttons[i] = KEY_REPEAT;
+		if (mouseButtons[i] == KEY_DOWN)
+			mouseButtons[i] = KEY_REPEAT;
 
-		if (mouse_buttons[i] == KEY_UP)
-			mouse_buttons[i] = KEY_IDLE;
+		if (mouseButtons[i] == KEY_UP)
+			mouseButtons[i] = KEY_IDLE;
 	}
 
 	while (SDL_PollEvent(&event) != 0)
@@ -93,20 +93,20 @@ update_status ModuleInput::PreUpdate()
 		case SDL_MOUSEWHEEL:
 			if (event.wheel.direction == SDL_MOUSEWHEEL_FLIPPED)
 			{
-				mouse_wheel_motion = event.wheel.x;
+				mouseWheelMotion = event.wheel.x;
 			}
 			else
 			{
-				mouse_wheel_motion = event.wheel.y;
+				mouseWheelMotion = event.wheel.y;
 			}
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
-			mouse_buttons[event.button.button - 1] = KEY_DOWN;
+			mouseButtons[event.button.button - 1] = KEY_DOWN;
 			break;
 
 		case SDL_MOUSEBUTTONUP:
-			mouse_buttons[event.button.button - 1] = KEY_UP;
+			mouseButtons[event.button.button - 1] = KEY_UP;
 			break;
 		}
 	}

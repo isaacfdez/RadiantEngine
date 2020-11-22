@@ -1,11 +1,11 @@
 #include "ModuleCamera.h"
 #include "Application.h"
-#include "ModuleWindow.h"
 #include "ModuleInput.h"
-#include "GL/glew.h"
 #include "Math/float3x3.h"
+#include "SDL_mouse.h"
+#include "SDL_scancode.h"
 
-ModuleCamera::ModuleCamera()
+bool ModuleCamera::Init()
 {
     frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
     frustum.SetViewPlaneDistances(0.1f, 200.0f);
@@ -14,91 +14,74 @@ ModuleCamera::ModuleCamera()
     frustum.SetPos(float3(0, 1, -2));
     frustum.SetFront(float3::unitZ);
     frustum.SetUp(float3::unitY);
-}
-
-ModuleCamera::~ModuleCamera() {}
-
-bool ModuleCamera::Init()
-{
     return true;
 }
 
 update_status ModuleCamera::PreUpdate()
 {
-    float delta_time = App->GetDeltaTime();
+    float deltaTime = App->GetDeltaTime();
 
-    float final_movement_speed = movement_speed;
+    float finalMovementSpeed = movementSpeed;
     if (App->input->GetKey(SDL_SCANCODE_LSHIFT) || App->input->GetKey(SDL_SCANCODE_RSHIFT))
     {
-        final_movement_speed *= 2;
+        finalMovementSpeed *= 2;
     }
 
-    float mouse_wheel_motion = App->input->GetMouseWheelMotion();
-    if (mouse_wheel_motion < -FLT_EPSILON || mouse_wheel_motion > FLT_EPSILON)
+    float mouseWheelMotion = App->input->GetMouseWheelMotion();
+    if (mouseWheelMotion < -FLT_EPSILON || mouseWheelMotion > FLT_EPSILON)
     {
-        Translate(frustum.Front().Normalized() * mouse_wheel_motion * 10 * final_movement_speed * delta_time);
+        Translate(frustum.Front().Normalized() * mouseWheelMotion * 10 * zoomSpeed * deltaTime);
     }
 
     if (App->input->GetKey(SDL_SCANCODE_Q))
     {
-        Translate(vec::unitY * final_movement_speed * delta_time);
+        Translate(vec::unitY * finalMovementSpeed * deltaTime);
     }
     if (App->input->GetKey(SDL_SCANCODE_E))
     {
-        Translate(vec::unitY * -final_movement_speed * delta_time);
+        Translate(vec::unitY * -finalMovementSpeed * deltaTime);
     }
     if (App->input->GetKey(SDL_SCANCODE_W))
     {
-        Translate(frustum.Front().Normalized() * final_movement_speed * delta_time);
+        Translate(frustum.Front().Normalized() * finalMovementSpeed * deltaTime);
     }
     if (App->input->GetKey(SDL_SCANCODE_S))
     {
-        Translate(frustum.Front().Normalized() * -final_movement_speed * delta_time);
+        Translate(frustum.Front().Normalized() * -finalMovementSpeed * deltaTime);
     }
     if (App->input->GetKey(SDL_SCANCODE_A))
     {
-        Translate(frustum.WorldRight().Normalized() * -final_movement_speed * delta_time);
+        Translate(frustum.WorldRight().Normalized() * -finalMovementSpeed * deltaTime);
     }
     if (App->input->GetKey(SDL_SCANCODE_D))
     {
-        Translate(frustum.WorldRight().Normalized() * final_movement_speed * delta_time);
+        Translate(frustum.WorldRight().Normalized() * finalMovementSpeed * deltaTime);
     }
 
     if (App->input->GetKey(SDL_SCANCODE_UP))
     {
-        Rotate(float3x3::RotateAxisAngle(frustum.WorldRight().Normalized(), rotation_speed * DEGTORAD * delta_time));
+        Rotate(float3x3::RotateAxisAngle(frustum.WorldRight().Normalized(), rotationSpeed * DEGTORAD * deltaTime));
     }
     if (App->input->GetKey(SDL_SCANCODE_DOWN))
     {
-        Rotate(float3x3::RotateAxisAngle(frustum.WorldRight().Normalized(), -rotation_speed * DEGTORAD * delta_time));
+        Rotate(float3x3::RotateAxisAngle(frustum.WorldRight().Normalized(), -rotationSpeed * DEGTORAD * deltaTime));
     }
     if (App->input->GetKey(SDL_SCANCODE_LEFT))
     {
-        Rotate(float3x3::RotateY(rotation_speed * DEGTORAD * delta_time));
+        Rotate(float3x3::RotateY(rotationSpeed * DEGTORAD * deltaTime));
     }
     if (App->input->GetKey(SDL_SCANCODE_RIGHT))
     {
-        Rotate(float3x3::RotateY(-rotation_speed * DEGTORAD * delta_time));
+        Rotate(float3x3::RotateY(-rotationSpeed * DEGTORAD * deltaTime));
     }
-    if (App->input->GetKey(SDL_SCANCODE_R)) 
+    if (App->input->GetKey(SDL_SCANCODE_F)) 
     {
         frustum.SetPos(float3(0, 1, -2));
         frustum.SetFront(float3::unitZ);
         frustum.SetUp(float3::unitY);
     }
 
-    float4x4 projectionGL = GetProjectionMatrix();
-
-    // Send the frustum projection matrix to OpenGL
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(*projectionGL.v);
-
-    float4x4 viewGL = GetViewMatrix();
-
-    // Send the frustum view matrix to OpenGL
-    glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixf(*viewGL.v);
-
+    
     return UPDATE_CONTINUE;
 }
 

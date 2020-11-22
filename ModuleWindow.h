@@ -15,6 +15,6 @@ public:
 	bool CleanUp();
 
 public:
-	SDL_Window* window = nullptr; // The window we'll be rendering to
-	SDL_Surface* screen_surface = nullptr; // The surface contained by the window
+	SDL_Window* window = nullptr; 
+	SDL_Surface* screenSurface = nullptr; 
 };

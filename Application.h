@@ -9,6 +9,7 @@ class ModuleCamera;
 class ModuleWindow;
 class ModuleTextures;
 class ModuleInput;
+class ModuleProgram;
 
 class Application
 {
@@ -27,10 +28,11 @@ public:
 	ModuleCamera* camera = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;	
+	ModuleProgram* program = nullptr;
 
 private:
-	float delta_time = 0.0f;
-	unsigned previous_time = 0;
+	float deltaTime = 0.0f;
+	unsigned previousTime = 0;
 
 	std::list<Module*> modules;
 };

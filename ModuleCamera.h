@@ -6,9 +6,7 @@
 class ModuleCamera : public Module
 {
 public:
-	ModuleCamera();
-	~ModuleCamera();
-
+	
 	bool Init();
 	update_status PreUpdate();
 	update_status Update();
@@ -29,6 +27,7 @@ public:
 
 private:
 	Frustum frustum;
-	float movement_speed = 5.0f;
-	float rotation_speed = 100.0f;
+	float movementSpeed = 5.0f;
+	float rotationSpeed = 100.0f;
+	float zoomSpeed = 5.0f;
 };

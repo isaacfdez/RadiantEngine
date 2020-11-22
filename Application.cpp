@@ -3,6 +3,7 @@
 #include "ModuleRender.h"
 #include "ModuleInput.h"
 #include "ModuleCamera.h"
+#include "ModuleProgram.h"
 #include "SDL_timer.h"
 
 Application::Application()
@@ -12,6 +13,7 @@ Application::Application()
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(camera = new ModuleCamera());
 	modules.push_back(renderer = new ModuleRender());
+	modules.push_back(program = new ModuleProgram());
 	
 }
 
@@ -25,7 +27,7 @@ Application::~Application()
 
 bool Application::Init()
 {
-	previous_time = SDL_GetTicks();
+	previousTime = SDL_GetTicks();
 
 	bool ret = true;
 
@@ -39,10 +41,10 @@ update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
 
-	unsigned now_time = SDL_GetTicks();
-	if (SDL_TICKS_PASSED(now_time, previous_time))
+	unsigned actualTime = SDL_GetTicks();
+	if (SDL_TICKS_PASSED(actualTime, previousTime))
 	{
-		delta_time = (now_time - previous_time) / 1000.0f;
+		deltaTime = (actualTime - previousTime) / 1000.0f;
 
 		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 			ret = (*it)->PreUpdate();
@@ -53,7 +55,7 @@ update_status Application::Update()
 		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 			ret = (*it)->PostUpdate();
 	}
-	previous_time = now_time;
+	previousTime = actualTime;
 
 	return ret;
 }
@@ -70,5 +72,5 @@ bool Application::CleanUp()
 
 float Application::GetDeltaTime()
 {
-	return delta_time;
+	return deltaTime;
 }

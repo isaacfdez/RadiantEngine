@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "ModuleCamera.h"
 #include "SDL.h"
+#include "ImGui/imgui_impl_sdl.h"
 
 ModuleInput::ModuleInput()
 {
@@ -74,6 +75,10 @@ update_status ModuleInput::PreUpdate()
 
 	while (SDL_PollEvent(&event) != 0)
 	{
+		if (ImGui_ImplSDL2_ProcessEvent(&event))
+		{
+			continue;
+		}
 		switch (event.type)
 		{
 		case SDL_QUIT:

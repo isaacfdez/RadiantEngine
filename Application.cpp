@@ -4,6 +4,7 @@
 #include "ModuleInput.h"
 #include "ModuleCamera.h"
 #include "ModuleProgram.h"
+#include "ModuleEditor.h"
 #include "SDL_timer.h"
 
 Application::Application()
@@ -13,6 +14,7 @@ Application::Application()
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(camera = new ModuleCamera());
 	modules.push_back(renderer = new ModuleRender());
+	modules.push_back(editor = new ModuleEditor());
 	modules.push_back(program = new ModuleProgram());
 	
 }

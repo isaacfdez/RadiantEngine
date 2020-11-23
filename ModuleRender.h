@@ -14,6 +14,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 	void WindowResized(int width, int height);
+	void* getContext();
 
 private:
 	void* context;

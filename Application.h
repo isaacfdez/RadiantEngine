@@ -10,6 +10,7 @@ class ModuleWindow;
 class ModuleTextures;
 class ModuleInput;
 class ModuleProgram;
+class ModuleEditor;
 
 class Application
 {
@@ -29,6 +30,7 @@ public:
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;	
 	ModuleProgram* program = nullptr;
+	ModuleEditor* editor = nullptr;
 
 private:
 	float deltaTime = 0.0f;

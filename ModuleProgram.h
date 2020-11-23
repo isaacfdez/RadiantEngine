@@ -7,6 +7,7 @@ public:
 	bool Init();
 	bool CleanUp();
 
+private:
 	unsigned program = 0;
 };
 

@@ -106,3 +106,5 @@ bool ModuleRender::CleanUp()
 }
 
 void ModuleRender::WindowResized(int width, int height) {}
+
+void* ModuleRender::getContext() { return context; }

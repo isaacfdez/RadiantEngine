@@ -135,9 +135,9 @@
     </ClCompile>
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="ModuleProgram.cpp" />
-    <ClCompile Include="DebugDraw\ModuleDebugDraw.cpp">
-      <Filter>DebugDraw</Filter>
-    </ClCompile>
+    <ClCompile Include="ModuleTextures.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="ModuleDebugDraw.cpp" />
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
@@ -147,16 +147,16 @@
     <ClCompile Include="ImGui\imgui_draw.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\imgui_widgets.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleEditor.cpp" />
     <ClCompile Include="ImGui\imgui_impl_opengl3.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_sdl.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleModels.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -401,13 +401,19 @@
     <ClInclude Include="DebugDraw\debugdraw.h">
       <Filter>DebugDraw</Filter>
     </ClInclude>
-    <ClInclude Include="DebugDraw\ModuleDebugDraw.h">
-      <Filter>DebugDraw</Filter>
-    </ClInclude>
+    <ClInclude Include="ModuleTextures.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="ModuleDebugDraw.h" />
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_opengl3.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_sdl.h">
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_internal.h">
@@ -422,13 +428,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleEditor.h" />
-    <ClInclude Include="ImGui\imgui_impl_opengl3.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_sdl.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
+    <ClInclude Include="ModuleModels.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">

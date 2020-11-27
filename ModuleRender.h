@@ -1,21 +1,20 @@
 #pragma once
-
 #include "Module.h"
 
-class ModuleRender : public Module
-{
+class ModuleRender : public Module {
 public:
-	ModuleRender();
-	~ModuleRender();
+	bool Init() override;
 
-	bool Init();
-	update_status PreUpdate();
-	update_status Update();
-	update_status PostUpdate();
-	bool CleanUp();
-	void WindowResized(int width, int height);
+	update_status PreUpdate() override;
+	update_status Update() override;
+	update_status PostUpdate() override;
+
+	bool CleanUp() override;
+
+	void WindowResized(unsigned width, unsigned height);
 	void* getContext();
 
 private:
-	void* context;
+	void* context = nullptr;
+
 };

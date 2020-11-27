@@ -3,76 +3,67 @@
 #include "ModuleRender.h"
 #include "ModuleInput.h"
 #include "ModuleCamera.h"
+#include "ModuleDebugDraw.h"
 #include "ModuleProgram.h"
-#include "ModuleEditor.h"
-#include "SDL_timer.h"
+#include "ModuleTextures.h"
+#include "ModuleModels.h"
 
-Application::Application()
-{
-	// Order matters: they will Init/start/update in this order
-	modules.push_back(input = new ModuleInput());
+using namespace std;
+
+Application::Application() {
 	modules.push_back(window = new ModuleWindow());
+	modules.push_back(input = new ModuleInput());
 	modules.push_back(camera = new ModuleCamera());
-	modules.push_back(renderer = new ModuleRender());
-	modules.push_back(editor = new ModuleEditor());
+	modules.push_back(texture = new ModuleTextures());
 	modules.push_back(program = new ModuleProgram());
-	
+	modules.push_back(model = new ModuleModels());
+	modules.push_back(render = new ModuleRender());
+	modules.push_back(debugDraw = new ModuleDebugDraw());
 }
 
-Application::~Application()
-{
-	for(std::list<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
-    {
-        delete *it;
-    }
+Application::~Application() {
+	for (list<Module*>::iterator it = modules.begin(); it != modules.end(); ++it) {
+		delete* it;
+	}
 }
 
-bool Application::Init()
-{
-	previousTime = SDL_GetTicks();
-
+bool Application::Init() {
 	bool ret = true;
 
-	for(std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
+	for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 		ret = (*it)->Init();
 
 	return ret;
 }
 
-update_status Application::Update()
-{
-	update_status ret = UPDATE_CONTINUE;
+update_status Application::Update() {
+	float currentTime = SDL_GetTicks();
+	deltaTime = (currentTime - previousTime) / 1000;
+	previousTime = currentTime;
 
-	unsigned actualTime = SDL_GetTicks();
-	if (SDL_TICKS_PASSED(actualTime, previousTime))
-	{
-		deltaTime = (actualTime - previousTime) / 1000.0f;
+	update_status ret = update_status::UPDATE_CONTINUE;
 
-		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-			ret = (*it)->PreUpdate();
+	for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
+		ret = (*it)->PreUpdate();
 
-		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-			ret = (*it)->Update();
+	for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
+		ret = (*it)->Update();
 
-		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-			ret = (*it)->PostUpdate();
-	}
-	previousTime = actualTime;
+	for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
+		ret = (*it)->PostUpdate();
 
 	return ret;
 }
 
-bool Application::CleanUp()
-{
+bool Application::CleanUp() {
 	bool ret = true;
 
-	for(std::list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
+	for (list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
 		ret = (*it)->CleanUp();
 
 	return ret;
 }
 
-float Application::GetDeltaTime()
-{
+float Application::getDeltaTime() {
 	return deltaTime;
 }

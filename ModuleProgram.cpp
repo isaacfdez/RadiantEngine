@@ -1,86 +1,67 @@
 #include "ModuleProgram.h"
-#include "GL/glew.h"
+#include "SDL.h"
+#include <GL\glew.h>
 
-bool ModuleProgram::Init()
-{
-	program = CreateProgram("fragment.glsl", "shader.glsl");
-	return true;
-}
-
-static unsigned CreateProgram(const char* fragmentShaderFilename, const char* vertexShaderFilename)
-{
-	unsigned fragmentShader = CreateShader(GL_FRAGMENT_SHADER, fragmentShaderFilename);
-	unsigned vertexShader = CreateShader(GL_VERTEX_SHADER, vertexShaderFilename);
-	
-	unsigned programID = glCreateProgram();
-	glAttachShader(programID, fragmentShader);
-	glAttachShader(programID, vertexShader);
-	glLinkProgram(programID);
-	int res = GL_FALSE;
-	glGetProgramiv(programID, GL_LINK_STATUS, &res);
-	if (res == GL_FALSE)
-	{
-		int len = 0;
-		glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &len);
-		if (len > 0)
-		{
-			int written = 0;
-			char* info = (char*)malloc(len);
-			glGetProgramInfoLog(programID, len, &written, info);
-			LOG("Program Log Info: %s", info);
-			free(info);
-		}
-	}
-	glDeleteShader(fragmentShader);
-	glDeleteShader(vertexShader);
-	return programID;
-}
-
-bool ModuleProgram::CleanUp()
-{
-	glDeleteProgram(program);
-
-	return true;
-}
-
-static char* ReadShaderFile(const char* filename)
-{
-	char* data = nullptr;
-	FILE* shader = fopen(filename, "rb");
-	if (shader)
-	{
-		fseek(shader, 0, SEEK_END);
-		int size = ftell(shader);
-		rewind(shader);
+char* ModuleProgram::LoadShaderSource(const char* shader_file_name) {
+	FILE* file = nullptr;
+	fopen_s(&file, shader_file_name, "rb");
+	if (file) {
+		fseek(file, 0, SEEK_END);
+		int size = ftell(file);
+		fseek(file, 0, SEEK_SET);
 		data = (char*)malloc(size + 1);
-		fread(data, 1, size, shader);
+		fread(data, 1, size, file);
 		data[size] = 0;
-		fclose(shader);
+		fclose(file);
 	}
 	return data;
 }
 
-static unsigned CreateShader(unsigned shaderType, const char* filename)
-{
-	char* shader = ReadShaderFile(filename);
-	unsigned shaderID = glCreateShader(shaderType);
-	glShaderSource(shaderID, 1, &shader, 0);
-	glCompileShader(shaderID);
+unsigned ModuleProgram::CompileShader(unsigned type, const char* source) {
+	unsigned shader_id = glCreateShader(type);
+	glShaderSource(shader_id, 1, &source, 0);
+	glCompileShader(shader_id);
 	int res = GL_FALSE;
-	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &res);
-	if (res == GL_FALSE)
-	{
+	glGetShaderiv(shader_id, GL_COMPILE_STATUS, &res);
+	if (res == GL_FALSE) {
 		int len = 0;
-		glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &len);
-		if (len > 0)
-		{
+		glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &len);
+		if (len > 0) {
 			int written = 0;
 			char* info = (char*)malloc(len);
-			glGetShaderInfoLog(shaderID, len, &written, info);
-			LOG("Log info: %s", info);
+			glGetShaderInfoLog(shader_id, len, &written, info);
+			LOG("Log Info: %s", info);
 			free(info);
 		}
 	}
-	free(shader);
-	return shaderID;
+	return shader_id;
+}
+
+unsigned ModuleProgram::CreateProgram(unsigned vtx_shader, unsigned frg_shader) {
+	unsigned program_id = glCreateProgram();
+	glAttachShader(program_id, vtx_shader);
+	glAttachShader(program_id, frg_shader);
+	glLinkProgram(program_id);
+	int res;
+	glGetProgramiv(program_id, GL_LINK_STATUS, &res);
+	if (res == GL_FALSE) {
+		int len = 0;
+		glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &len);
+		if (len > 0) {
+			int written = 0;
+			char* info = (char*)malloc(len);
+			glGetProgramInfoLog(program_id, len, &written, info);
+			LOG("Program Log Info: %s", info);
+			free(info);
+		}
+	}
+	glDeleteShader(vtx_shader);
+	glDeleteShader(frg_shader);
+	return program_id;
+}
+
+bool ModuleProgram::CleanUp() {
+	free(data);
+	data = nullptr;
+	return true;
 }

@@ -1,13 +1,15 @@
 #pragma once
 #include "Module.h"
 
-class ModuleProgram : public Module
-{
+class ModuleProgram : public Module {
 public:
-	bool Init();
-	bool CleanUp();
+	char* LoadShaderSource(const char* shader_file_name);
+	unsigned CompileShader(unsigned type, const char* source);
+	unsigned CreateProgram(unsigned vtx_shader, unsigned frg_shader);
+	
+	bool CleanUp() override;
 
 private:
-	unsigned program = 0;
+	char* data = nullptr;
 };
 

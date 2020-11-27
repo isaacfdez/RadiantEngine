@@ -1,14 +1,13 @@
 #include <stdlib.h>
 #include "Application.h"
-
-#include "SDL.h"
+#include "SDL/include/SDL.h"
 #pragma comment( lib, "SDL/lib/x86/SDL2.lib" )
 #pragma comment( lib, "SDL/lib/x86/SDL2main.lib" )
 
-enum main_states
+enum class main_states
 {
 	MAIN_CREATION,
-	MAIN_START,
+	MAIN_INIT,
 	MAIN_UPDATE,
 	MAIN_FINISH,
 	MAIN_EXIT
@@ -16,69 +15,60 @@ enum main_states
 
 Application* App = NULL;
 
-int main(int argc, char ** argv)
-{
+int main(int argc, char** argv) {
 	int main_return = EXIT_FAILURE;
-	main_states state = MAIN_CREATION;
+	main_states state = main_states::MAIN_CREATION;
 
-	while (state != MAIN_EXIT)
-	{
-		switch (state)
-		{
-		case MAIN_CREATION:
+	while (state != main_states::MAIN_EXIT) {
+		switch (state) {
+		case  main_states::MAIN_CREATION:
 
 			LOG("Application Creation --------------");
 			App = new Application();
-			state = MAIN_START;
+			state = main_states::MAIN_INIT;
 			break;
 
-		case MAIN_START:
+		case  main_states::MAIN_INIT:
 
 			LOG("Application Init --------------");
-			if (App->Init() == false)
-			{
+			if (App->Init() == false) {
 				LOG("Application Init exits with error -----");
-				state = MAIN_EXIT;
+				state = main_states::MAIN_EXIT;
 			}
-			else
-			{
-				state = MAIN_UPDATE;
+			else {
+				state = main_states::MAIN_UPDATE;
 				LOG("Application Update --------------");
 			}
 
 			break;
 
-		case MAIN_UPDATE:
+		case  main_states::MAIN_UPDATE:
 		{
-			int update_return = App->Update();
+			update_status update_return = App->Update();
 
-			if (update_return == UPDATE_ERROR)
-			{
+			if (update_return == update_status::UPDATE_ERROR) {
 				LOG("Application Update exits with error -----");
-				state = MAIN_EXIT;
+				state = main_states::MAIN_EXIT;
 			}
 
-			if (update_return == UPDATE_STOP)
-				state = MAIN_FINISH;
+			if (update_return == update_status::UPDATE_STOP)
+				state = main_states::MAIN_FINISH;
 		}
-			break;
+		break;
 
-		case MAIN_FINISH:
+		case  main_states::MAIN_FINISH:
 
 			LOG("Application CleanUp --------------");
-			if (App->CleanUp() == false)
-			{
+			if (App->CleanUp() == false) {
 				LOG("Application CleanUp exits with error -----");
 			}
 			else
 				main_return = EXIT_SUCCESS;
 
-			state = MAIN_EXIT;
+			state = main_states::MAIN_EXIT;
 
 			break;
-
 		}
-
 	}
 
 	delete App;

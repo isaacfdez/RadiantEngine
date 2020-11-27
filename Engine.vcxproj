@@ -80,7 +80,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./glew-2.2.0/lib/Release/Win32;./DevIL/lib/x86/Release;./Assimp/lib;./SDL/lib/x86;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;assimp-vc141-mt.lib;DevIL.lib;ILU.lib;ILUT.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2main.lib;SDL2.lib;assimp-vc141-mt.lib;DevIL.lib;ILU.lib;ILUT.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -141,7 +141,6 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="DebugDraw\debugdraw.h" />
     <ClInclude Include="DebugDraw\debug_draw.hpp" />
-    <ClInclude Include="DebugDraw\ModuleDebugDraw.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -227,17 +226,19 @@
     <ClInclude Include="MathGeoLib\Math\TransformOps.h" />
     <ClInclude Include="MathGeoLib\Math\vec2d.h" />
     <ClInclude Include="MathGeoLib\Time\Clock.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleCamera.h" />
-    <ClInclude Include="ModuleEditor.h" />
+    <ClInclude Include="ModuleDebugDraw.h" />
     <ClInclude Include="ModuleInput.h" />
+    <ClInclude Include="ModuleModels.h" />
     <ClInclude Include="ModuleProgram.h" />
     <ClInclude Include="ModuleRender.h" />
+    <ClInclude Include="ModuleTextures.h" />
     <ClInclude Include="ModuleWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="DebugDraw\ModuleDebugDraw.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
@@ -288,11 +289,14 @@
     <ClCompile Include="MathGeoLib\Math\SSEMath.cpp" />
     <ClCompile Include="MathGeoLib\Math\TransformOps.cpp" />
     <ClCompile Include="MathGeoLib\Time\Clock.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ModuleCamera.cpp" />
-    <ClCompile Include="ModuleEditor.cpp" />
+    <ClCompile Include="ModuleDebugDraw.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
+    <ClCompile Include="ModuleModels.cpp" />
     <ClCompile Include="ModuleProgram.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
+    <ClCompile Include="ModuleTextures.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
   </ItemGroup>
   <ItemGroup>

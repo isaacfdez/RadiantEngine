@@ -3,7 +3,6 @@
 
 #define DEBUG_DRAW_IMPLEMENTATION
 #include "DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
-
 #include "GL/glew.h"
 
 class DDRenderInterfaceCoreGL final
@@ -580,13 +579,6 @@ const char * DDRenderInterfaceCoreGL::textFragShaderSrc = "\n"
 
 DDRenderInterfaceCoreGL* ModuleDebugDraw::implementation = 0;
 
-ModuleDebugDraw::ModuleDebugDraw() 
-{
-}
-
-ModuleDebugDraw::~ModuleDebugDraw()
-{
-}
 
 bool ModuleDebugDraw::Init()
 {
@@ -608,11 +600,14 @@ bool ModuleDebugDraw::CleanUp()
 
 update_status  ModuleDebugDraw::Update()
 {
-	return UPDATE_CONTINUE;
+	return update_status::UPDATE_CONTINUE;
 }
 
 void ModuleDebugDraw::Draw(const float4x4& view, const float4x4& proj, unsigned width, unsigned height)
 {
+    dd::axisTriad(float4x4::identity, 0.1f, 1.0f);
+    dd::xzSquareGrid(-10, 10, 0.0f, 1.0f, dd::colors::Gray);
+
     implementation->width     = width;
     implementation->height    = height;
     implementation->mvpMatrix = proj * view;

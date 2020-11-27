@@ -1,163 +1,138 @@
 #include "ModuleCamera.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "SDL.h"
 #include "Math/float3x3.h"
-#include "SDL_mouse.h"
-#include "SDL_scancode.h"
+#include "Math/Quat.h"
 
-bool ModuleCamera::Init()
-{
+bool ModuleCamera::Init() {
     frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
-    frustum.SetViewPlaneDistances(0.1f, 200.0f);
-    frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * 90.0f, 1.3f);
-
-    frustum.SetPos(float3(0, 1, -2));
+    frustum.SetViewPlaneDistances(0.1f, 32.0f);
+    frustum.SetHorizontalFovAndAspectRatio(DEGTORAD*90.0f, 1.3f);
+    frustum.SetPos(float3(0, 3, -8));
     frustum.SetFront(float3::unitZ);
     frustum.SetUp(float3::unitY);
+
     return true;
 }
 
-update_status ModuleCamera::PreUpdate()
-{
-    float deltaTime = App->GetDeltaTime();
+void ModuleCamera::Rotate(float3x3 rotationMatrix) {
+    frustum.SetFront(rotationMatrix.MulDir(frustum.Front().Normalized()));
+    frustum.SetUp(rotationMatrix.MulDir(frustum.Up().Normalized()));
+}
 
-    float finalMovementSpeed = movementSpeed;
-    if (App->input->GetKey(SDL_SCANCODE_LSHIFT) || App->input->GetKey(SDL_SCANCODE_RSHIFT))
-    {
-        finalMovementSpeed *= 2;
-    }
+void ModuleCamera::KeyboardMovement() {
+    float3 movement(0, 0, 0);
 
-    float mouseWheelMotion = App->input->GetMouseWheelMotion();
-    if (mouseWheelMotion < -FLT_EPSILON || mouseWheelMotion > FLT_EPSILON)
-    {
-        Translate(frustum.Front().Normalized() * mouseWheelMotion * 10 * zoomSpeed * deltaTime);
+    if (App->input->GetKey(SDL_SCANCODE_Q) == KeyState::KEY_REPEAT) {
+        movement += float3::unitY;
     }
-
-    if (App->input->GetKey(SDL_SCANCODE_Q))
-    {
-        Translate(vec::unitY * finalMovementSpeed * deltaTime);
-    }
-    if (App->input->GetKey(SDL_SCANCODE_E))
-    {
-        Translate(vec::unitY * -finalMovementSpeed * deltaTime);
-    }
-    if (App->input->GetKey(SDL_SCANCODE_W))
-    {
-        Translate(frustum.Front().Normalized() * finalMovementSpeed * deltaTime);
-    }
-    if (App->input->GetKey(SDL_SCANCODE_S))
-    {
-        Translate(frustum.Front().Normalized() * -finalMovementSpeed * deltaTime);
-    }
-    if (App->input->GetKey(SDL_SCANCODE_A))
-    {
-        Translate(frustum.WorldRight().Normalized() * -finalMovementSpeed * deltaTime);
-    }
-    if (App->input->GetKey(SDL_SCANCODE_D))
-    {
-        Translate(frustum.WorldRight().Normalized() * finalMovementSpeed * deltaTime);
+    if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_REPEAT) {
+        movement -= float3::unitY;
     }
 
-    if (App->input->GetKey(SDL_SCANCODE_UP))
-    {
-        Rotate(float3x3::RotateAxisAngle(frustum.WorldRight().Normalized(), rotationSpeed * DEGTORAD * deltaTime));
+    if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT) {
+        movement += frustum.Front();
     }
-    if (App->input->GetKey(SDL_SCANCODE_DOWN))
-    {
-        Rotate(float3x3::RotateAxisAngle(frustum.WorldRight().Normalized(), -rotationSpeed * DEGTORAD * deltaTime));
+    if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT) {
+        movement -= frustum.Front();
     }
-    if (App->input->GetKey(SDL_SCANCODE_LEFT))
-    {
-        Rotate(float3x3::RotateY(rotationSpeed * DEGTORAD * deltaTime));
+
+    if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) {
+        movement -= frustum.WorldRight();
     }
-    if (App->input->GetKey(SDL_SCANCODE_RIGHT))
-    {
-        Rotate(float3x3::RotateY(-rotationSpeed * DEGTORAD * deltaTime));
+    if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) {
+        movement += frustum.WorldRight();
     }
-    if (App->input->GetKey(SDL_SCANCODE_F)) 
-    {
-        frustum.SetPos(float3(0, 1, -2));
+
+    frustum.Translate(movement * movementSpeed * App->getDeltaTime());
+}
+
+void ModuleCamera::KeyboardRotation() {
+    float rotateY = 0.0f; float rotateX = 0.0f;
+
+    if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT) {
+        rotateX += 1;
+    }
+    if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT) {
+        rotateX -= 1;
+    }
+
+    if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT) {
+        rotateY += 1;
+    }
+    if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT) {
+        rotateY -= 1;
+    }
+
+    Quat quatX(frustum.WorldRight(), rotateX * rotationSpeed * App->getDeltaTime());
+    Quat quatY(float3::unitY, rotateY * rotationSpeed * App->getDeltaTime());
+
+    Rotate(float3x3::FromQuat(quatX) * float3x3::FromQuat(quatY));
+}
+
+void ModuleCamera::MouseMovement(int x, int y) {
+    float3 movement(0, 0, 0);
+
+    if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT && x != 0 && y != 0) {
+        movement += frustum.WorldRight() + frustum.Front();
+        movement.x -= (float)x;
+        movement.y -= (float)y;
+    }
+    frustum.Translate(movement * movementSpeed * App->getDeltaTime());
+}
+
+void ModuleCamera::MouseRotation(int x, int y) {
+    float rotateY = 0.0f; float rotateX = 0.0f;
+
+    if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT && x != 0 && y != 0) {
+        rotateX = -(float)y * App->getDeltaTime() * movementSpeed;
+        rotateY = -(float)x * App->getDeltaTime() * movementSpeed;
+    }
+
+    Quat quatX(frustum.WorldRight(), rotateX * rotationSpeed * App->getDeltaTime());
+    Quat quatY(float3::unitY, rotateY * rotationSpeed * App->getDeltaTime());
+
+    Rotate(float3x3::FromQuat(quatX) * float3x3::FromQuat(quatY));
+}
+
+void ModuleCamera::focus() {
+    if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_REPEAT) {
+        frustum.SetPos(float3(0, 3, -8));
         frustum.SetFront(float3::unitZ);
         frustum.SetUp(float3::unitY);
     }
-
-    
-    return UPDATE_CONTINUE;
 }
 
-update_status ModuleCamera::Update()
-{
-    return UPDATE_CONTINUE;
+void ModuleCamera::zoom() {
+    float mouseWheelMotion = App->input->GetMouseWheelMotion();
+    if (mouseWheelMotion < -FLT_EPSILON || mouseWheelMotion > FLT_EPSILON)
+    {
+        frustum.SetPos(frustum.Pos() + (frustum.Front().Normalized() * mouseWheelMotion * 10 * zoomSpeed * App->getDeltaTime()));
+    }
 }
 
-update_status ModuleCamera::PostUpdate()
-{
-    return UPDATE_CONTINUE;
+update_status ModuleCamera::PreUpdate() {
+    return update_status::UPDATE_CONTINUE;
 }
 
-bool ModuleCamera::CleanUp()
-{
+update_status ModuleCamera::Update() {
+    int x, y;
+    SDL_GetRelativeMouseState(&x, &y);
+
+    KeyboardMovement();
+    KeyboardRotation();
+    MouseMovement(x, y);
+    MouseRotation(x, y);
+    focus();
+    zoom();
+    return update_status::UPDATE_CONTINUE;
+}
+
+update_status ModuleCamera::PostUpdate() {
+    return update_status::UPDATE_CONTINUE;
+}
+
+bool ModuleCamera::CleanUp() {
     return true;
-}
-
-void ModuleCamera::WindowResized(int width, int height)
-{
-    SetAspectRatio(width / (float) height);
-}
-
-void ModuleCamera::SetFOV(float h_fov)
-{
-    frustum.SetHorizontalFovAndAspectRatio(h_fov, frustum.AspectRatio());
-}
-
-void ModuleCamera::SetAspectRatio(float aspect_ratio)
-{
-    frustum.SetHorizontalFovAndAspectRatio(frustum.HorizontalFov(), aspect_ratio);
-}
-
-void ModuleCamera::SetPlaneDistances(float near_plane, float far_plane)
-{
-    frustum.SetViewPlaneDistances(near_plane, far_plane);
-}
-
-void ModuleCamera::SetPosition(float x, float y, float z)
-{
-    frustum.SetPos(vec(x, y, z));
-}
-
-void ModuleCamera::SetOrientation(float x, float y, float z)
-{
-    float3x3 rotationMatrix = float3x3::FromEulerXYZ(x, y, z);
-    frustum.SetFront(rotationMatrix * float3::unitZ);
-    frustum.SetUp(rotationMatrix * float3::unitY);
-}
-
-void ModuleCamera::Translate(vec translation)
-{
-    frustum.SetPos(frustum.Pos() + translation);
-}
-
-void ModuleCamera::Rotate(float3x3 rotationMatrix)
-{
-    vec oldFront = frustum.Front().Normalized();
-    vec oldUp = frustum.Up().Normalized();
-    frustum.SetFront(rotationMatrix * oldFront);
-    frustum.SetUp(rotationMatrix * oldUp);
-}
-
-void ModuleCamera::LookAt(float x, float y, float z)
-{
-    vec direction = vec(x, y, z) - frustum.Pos();
-    direction.Normalize();
-    Rotate(float3x3::LookAt(frustum.Front().Normalized(), direction, frustum.Up().Normalized(), float3::unitY));
-}
-
-float4x4 ModuleCamera::GetProjectionMatrix()
-{
-    return frustum.ProjectionMatrix().Transposed();
-}
-
-float4x4 ModuleCamera::GetViewMatrix()
-{
-    return float4x4(frustum.ViewMatrix()).Transposed();
 }

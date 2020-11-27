@@ -1,22 +1,16 @@
 #pragma once
-
 #include "Module.h"
+#include "SDL.h"
 
-class SDL_Window;
-class SDL_Surface;
+class Application;
 
-class ModuleWindow : public Module
-{
+class ModuleWindow : public Module {
 public:
-	ModuleWindow();
-	virtual ~ModuleWindow();
 
-	bool Init();
-	bool CleanUp();
-	SDL_Window* getWindow();
-	SDL_Surface* getScreenSurface();
+	bool Init() override;
+	bool CleanUp() override;
 
-private:
-	SDL_Window* window = nullptr; 
-	SDL_Surface* screenSurface = nullptr; 
+public:
+	SDL_Window* window = NULL;
+	SDL_Surface* screenSurface = NULL;
 };

@@ -1,41 +1,42 @@
 #pragma once
-
-#include <list>
+#include<list>
 #include "Globals.h"
+#include "Module.h"
 
-class Module;
 class ModuleRender;
-class ModuleCamera;
 class ModuleWindow;
-class ModuleTextures;
 class ModuleInput;
+class ModuleCamera;
+class ModuleDebugDraw;
 class ModuleProgram;
-class ModuleEditor;
+class ModuleTextures;
+class ModuleModels;
 
-class Application
-{
+class Application {
 public:
+
 	Application();
 	~Application();
 
 	bool Init();
 	update_status Update();
 	bool CleanUp();
-
-	float GetDeltaTime();
+	float getDeltaTime();
 
 public:
-	ModuleRender* renderer = nullptr;
-	ModuleCamera* camera = nullptr;
+	ModuleRender* render = nullptr;
 	ModuleWindow* window = nullptr;
-	ModuleInput* input = nullptr;	
+	ModuleInput* input = nullptr;
+	ModuleCamera* camera = nullptr;
+	ModuleDebugDraw* debugDraw = nullptr;
 	ModuleProgram* program = nullptr;
-	ModuleEditor* editor = nullptr;
+	ModuleTextures* texture = nullptr;
+	ModuleModels* model = nullptr;
+	
 
 private:
 	float deltaTime = 0.0f;
-	unsigned previousTime = 0;
-
+	float previousTime = 0.0f;
 	std::list<Module*> modules;
 };
 

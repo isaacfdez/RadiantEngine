@@ -1,25 +1,36 @@
 #pragma once
-
 #include <windows.h>
 #include <stdio.h>
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
+#define DEGTORAD pi/180
 
 void log(const char file[], int line, const char* format, ...);
 
-enum update_status
-{
+enum class update_status {
 	UPDATE_CONTINUE = 1,
 	UPDATE_STOP,
 	UPDATE_ERROR
 };
 
-// Constants -----------
-#define DEGTORAD pi/180
+enum class WindowEvent {
+	kQuit = 0,
+	kHide,
+	kShow,
+	kCount
+};
+
+enum class KeyState {
+	KEY_IDLE = 0,
+	KEY_DOWN,
+	KEY_REPEAT,
+	KEY_UP
+};
 
 // Configuration -----------
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
+#define SCREEN_SIZE 2
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Radiant Engine"

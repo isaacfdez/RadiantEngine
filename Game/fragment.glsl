@@ -1,12 +1,11 @@
-#version 330
+#version 460
 
-uniform sampler2D diffuse;
+out vec4 color;
 
 in vec2 uv0;
 
-layout(location = 0) out vec3 color;
+uniform sampler2D mytexture;
 
-void main()
-{
-	color = texture(diffuse, uv0).xyz;
+void main() {
+	color = texture2D(mytexture, uv0);
 }

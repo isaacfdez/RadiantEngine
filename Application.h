@@ -11,6 +11,7 @@ class ModuleDebugDraw;
 class ModuleProgram;
 class ModuleTextures;
 class ModuleModels;
+class ModuleEditor;
 
 class Application {
 public:
@@ -22,6 +23,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 	float getDeltaTime();
+	void GoToBrowser(const char* url);
 
 public:
 	ModuleRender* render = nullptr;
@@ -32,7 +34,7 @@ public:
 	ModuleProgram* program = nullptr;
 	ModuleTextures* texture = nullptr;
 	ModuleModels* model = nullptr;
-	
+	ModuleEditor* editor = nullptr;
 
 private:
 	float deltaTime = 0.0f;

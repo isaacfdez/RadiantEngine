@@ -7,6 +7,7 @@
 #include "ModuleProgram.h"
 #include "ModuleTextures.h"
 #include "ModuleModels.h"
+#include "ModuleEditor.h"
 
 using namespace std;
 
@@ -19,6 +20,8 @@ Application::Application() {
 	modules.push_back(model = new ModuleModels());
 	modules.push_back(render = new ModuleRender());
 	modules.push_back(debugDraw = new ModuleDebugDraw());
+	modules.push_back(editor = new ModuleEditor());
+
 }
 
 Application::~Application() {
@@ -66,4 +69,8 @@ bool Application::CleanUp() {
 
 float Application::getDeltaTime() {
 	return deltaTime;
+}
+
+void Application::GoToBrowser(const char* url) {
+	ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
 }

@@ -1,20 +1,22 @@
 #pragma once
+
 #include "Module.h"
 
-class ModuleRender : public Module {
+class ModuleEditor : public Module
+{
 public:
 	bool Init() override;
-
+	
 	update_status PreUpdate() override;
 	update_status Update() override;
 	update_status PostUpdate() override;
 
 	bool CleanUp() override;
 
-	void WindowResized(unsigned width, unsigned height);
-	//void* getContext();
-
-public:
-	void* context = nullptr;
-
+private:
+	bool consoleEnabled = true;
+	bool configEnabled = true;
+	bool aboutEnabled = true;
+	bool propertiesEnabled = true;
 };
+

@@ -14,7 +14,7 @@ public:
 	unsigned int GetNumVertices();
 	bool CleanUp() override;
 
-public:
+private:
 	std::vector<Mesh> meshes;
 	std::vector<unsigned int> textures;
 };

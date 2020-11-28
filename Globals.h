@@ -34,3 +34,6 @@ enum class KeyState {
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Radiant Engine"
+#define AUTHORS "Isaac Fernandez Fontao"
+#define LIBRARIES "Assimp, Dear ImGui, DevIL, GLEW, MathGeoLib, SDL"
+#define LICENSE "MIT License"

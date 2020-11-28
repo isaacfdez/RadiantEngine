@@ -17,6 +17,6 @@ private:
 	bool consoleEnabled = true;
 	bool configEnabled = true;
 	bool aboutEnabled = true;
-	bool propertiesEnabled = true;
+	bool propertiesEnabled = true;	
 };
 

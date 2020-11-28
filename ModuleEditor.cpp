@@ -6,6 +6,8 @@
 #include "ImGui/imgui_impl_opengl3.h"
 #include "ImGui/imgui_impl_sdl.h"
 
+static ImVec4 purple = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);
+
 bool ModuleEditor::Init() {
 	ImGui::CreateContext();
     ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->render->context);
@@ -61,7 +63,18 @@ update_status ModuleEditor::Update() {
 
     if (aboutEnabled) {
         if (ImGui::Begin("About")) {
-
+            ImGui::Text("Engine Name:");
+            ImGui::SameLine();
+            ImGui::TextColored(purple, TITLE);
+            ImGui::Text("Authors:");
+            ImGui::SameLine();
+            ImGui::TextColored(purple, AUTHORS);
+            ImGui::Text("Libraries used:");
+            ImGui::SameLine();
+            ImGui::TextColored(purple, LIBRARIES);
+            ImGui::Text("License:");
+            ImGui::SameLine();
+            ImGui::TextColored(purple, LICENSE);
         }
         ImGui::End();
     }

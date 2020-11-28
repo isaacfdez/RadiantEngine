@@ -48,10 +48,4 @@ bool ModuleWindow::CleanUp() {
 	return true;
 }
 
-SDL_Window* ModuleWindow::GetWindow() {
-	return window;
-}
 
-SDL_Surface* ModuleWindow::GetScreenSurface() {
-	return screenSurface;
-}

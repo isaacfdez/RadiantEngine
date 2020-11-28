@@ -9,10 +9,8 @@ public:
 
 	bool Init() override;
 	bool CleanUp() override;
-	SDL_Window* GetWindow();
-	SDL_Surface* GetScreenSurface();
 
-private:
+public:
 	SDL_Window* window = NULL;
 	SDL_Surface* screenSurface = NULL;
 };

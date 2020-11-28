@@ -12,13 +12,10 @@ public:
 
 	bool CleanUp() override;
 
-	float4x4 GetProjectionMatrix();
-	float4x4 GetViewMatrix();
-
 private:
 	void Rotate(float3x3 rotationMatrix);
 
-private:
+public:
 	Frustum frustum;
 	float movementSpeed = 5.0f;
 	float rotationSpeed = 25.0f;

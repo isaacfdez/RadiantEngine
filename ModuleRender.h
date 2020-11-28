@@ -12,9 +12,9 @@ public:
 	bool CleanUp() override;
 
 	void WindowResized(unsigned width, unsigned height);
-	void* getContext();
+	//void* getContext();
 
-private:
+public:
 	void* context = nullptr;
 
 };

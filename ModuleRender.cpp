@@ -14,7 +14,7 @@
 bool ModuleRender::Init() {
 	LOG("Creating Renderer context");
 
-	SDL_GLContext context = SDL_GL_CreateContext(App->window->GetWindow());
+	SDL_GLContext context = SDL_GL_CreateContext(App->window->window);
 	glewInit();
 
 	glEnable(GL_DEPTH_TEST);
@@ -27,7 +27,7 @@ bool ModuleRender::Init() {
 }
 
 update_status ModuleRender::PreUpdate() {
-	SDL_GetWindowSize(App->window->GetWindow(), NULL, NULL);
+	SDL_GetWindowSize(App->window->window, NULL, NULL);
 
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -37,10 +37,10 @@ update_status ModuleRender::PreUpdate() {
 
 update_status ModuleRender::Update() {
 	int w, h;
-	SDL_GetWindowSize(App->window->GetWindow(), &w, &h);
+	SDL_GetWindowSize(App->window->window, &w, &h);
 
-	float4x4 proj = App->camera->GetProjectionMatrix();
-	float4x4 view = App->camera->GetViewMatrix();
+	float4x4 proj = App->camera->frustum.ProjectionMatrix();
+	float4x4 view = App->camera->frustum.ViewMatrix();
 
 	App->model->Draw();
 
@@ -50,7 +50,7 @@ update_status ModuleRender::Update() {
 }
 
 update_status ModuleRender::PostUpdate() {
-	SDL_GL_SwapWindow(App->window->GetWindow());
+	SDL_GL_SwapWindow(App->window->window);
 
 	return update_status::UPDATE_CONTINUE;
 }
@@ -65,6 +65,6 @@ bool ModuleRender::CleanUp() {
 
 void ModuleRender::WindowResized(unsigned width, unsigned height) {}
 
-void* ModuleRender::getContext() {
+/*void* ModuleRender::getContext() {
 	return context;
-}
+}*/

@@ -6,13 +6,6 @@ class ModuleCamera : public Module {
 public:
 	bool Init() override;
 
-	void KeyboardMovement();
-	void KeyboardRotation();
-	void MouseMovement(int x, int y);
-	void MouseRotation(int x, int y);
-	void focus();
-	void zoom();
-
 	update_status PreUpdate() override;
 	update_status Update() override;
 	update_status PostUpdate() override;
@@ -25,7 +18,8 @@ private:
 public:
 	Frustum frustum;
 	float movementSpeed = 5.0f;
-	float rotationSpeed = 2.0f;
+	float rotationSpeed = 25.0f;
 	float zoomSpeed = 5.0f;
+
 };
 

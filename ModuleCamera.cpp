@@ -82,3 +82,11 @@ update_status ModuleCamera::PostUpdate() {
 bool ModuleCamera::CleanUp() {
     return true;
 }
+
+float4x4 ModuleCamera::GetProjectionMatrix() {
+    return frustum.ProjectionMatrix();
+}
+
+float4x4 ModuleCamera::GetViewMatrix() {
+    return frustum.ViewMatrix();
+}

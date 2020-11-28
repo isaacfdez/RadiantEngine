@@ -10,14 +10,14 @@ static ImVec4 purple = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);
 
 bool ModuleEditor::Init() {
 	ImGui::CreateContext();
-    ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->render->context);
+    ImGui_ImplSDL2_InitForOpenGL(App->window->GetWindow(), App->render->getContext());
     ImGui_ImplOpenGL3_Init();
     return true;
 }
 
 update_status ModuleEditor::PreUpdate() {
     ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL2_NewFrame(App->window->window);
+    ImGui_ImplSDL2_NewFrame(App->window->GetWindow());
     ImGui::NewFrame();
     return update_status::UPDATE_CONTINUE;
 }

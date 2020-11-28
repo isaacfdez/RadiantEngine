@@ -8,19 +8,8 @@
 #include <assimp/postprocess.h>
 
 void ModuleModels::Load(const char* modelPath, const char* vertexShaderPath, const char* fragmentShaderPath) {
-	unsigned int vertexShader = 0;
-	unsigned int fragmentShader = 0;
-	unsigned int program = 0;
-
-	char* vertex_shader_url = App->program->LoadShaderSource(vertexShaderPath);
-	if (vertex_shader_url) vertexShader = App->program->CompileShader(GL_VERTEX_SHADER, vertex_shader_url);
-
-	char* fragment_shader_url = App->program->LoadShaderSource(fragmentShaderPath);
-	if (fragment_shader_url) fragmentShader = App->program->CompileShader(GL_FRAGMENT_SHADER, fragment_shader_url);
-
-	if (vertexShader && fragmentShader)
-		program = App->program->CreateProgram(vertexShader, fragmentShader);
-
+	unsigned int program = CreateProgram(vertexShaderPath, fragmentShaderPath);
+	
 	const aiScene* scene = aiImportFile(modelPath, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (program && scene) {
 
@@ -33,6 +22,10 @@ void ModuleModels::Load(const char* modelPath, const char* vertexShaderPath, con
 	aiReleaseImport(scene);
 }
 
+void ModuleModels::Load(const char* modelPath) {
+	Load(modelPath, "vertex.glsl", "fragment.glsl");
+}
+
 void ModuleModels::LoadTextures(aiMaterial** const mMaterials, unsigned int mNumMaterials) {
 	aiString file;
 	textures.reserve(mNumMaterials);
@@ -41,6 +34,28 @@ void ModuleModels::LoadTextures(aiMaterial** const mMaterials, unsigned int mNum
 			textures.push_back(App->texture->LoadTexture(file.data));
 		}
 	}
+}
+
+unsigned int ModuleModels::CreateProgram(const char* vertexShaderPath, const char* fragmentShaderPath) {
+	unsigned int vertexShader = 0;
+	unsigned int fragmentShader = 0;
+	unsigned int program = 0;
+
+	char* vertex_shader_url = App->program->LoadShaderSource(vertexShaderPath);
+	if (vertex_shader_url) {
+		vertexShader = App->program->CompileShader(GL_VERTEX_SHADER, vertex_shader_url);
+	}
+
+	char* fragment_shader_url = App->program->LoadShaderSource(fragmentShaderPath);
+	if (fragment_shader_url) {
+		fragmentShader = App->program->CompileShader(GL_FRAGMENT_SHADER, fragment_shader_url);
+	}
+
+	if (vertexShader && fragmentShader) {
+		program = App->program->CreateProgram(vertexShader, fragmentShader);
+	}
+
+	return program;
 }
 
 unsigned int ModuleModels::GetNumVertices() {

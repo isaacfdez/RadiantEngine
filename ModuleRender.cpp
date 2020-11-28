@@ -21,7 +21,7 @@ bool ModuleRender::Init() {
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 
-	App->model->Load("BakerHouse.fbx", "vertex.glsl", "fragment.glsl");
+	App->model->Load("BakerHouse.fbx");
 
 	return true;
 }

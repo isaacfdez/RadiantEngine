@@ -10,6 +10,7 @@ public:
 	void CreateVAO();
 	void Draw(const std::vector<unsigned>& textures);
 
+public:
 	unsigned int numVertices = 0;
 	unsigned int numIndices = 0;
 	unsigned int materialIndex = 0;

@@ -1,6 +1,7 @@
 #include "ModuleInput.h"
 #include "Application.h"
 #include "ModuleRender.h"
+#include "ModuleModels.h"
 #include "SDL.h"
 
 bool ModuleInput::Init() {
@@ -93,6 +94,11 @@ update_status ModuleInput::Update() {
 			else {
 				mouseWheelMotion = event.wheel.y;
 			}
+			break;
+
+		case SDL_DROPFILE:
+			App->model->Load(event.drop.file);
+			break;
 		}
 		
 	}

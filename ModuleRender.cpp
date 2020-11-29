@@ -21,7 +21,7 @@ bool ModuleRender::Init() {
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 
-	App->model->Load("BakerHouse.fbx");
+	App->model->Load("Assets/BakerHouse.fbx");
 
 	return true;
 }

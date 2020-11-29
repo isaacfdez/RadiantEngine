@@ -13,7 +13,14 @@ void ModuleModels::Load(const char* modelPath, const char* vertexShaderPath, con
 	const aiScene* scene = aiImportFile(modelPath, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (program && scene) {
 
-		LoadTextures(scene->mMaterials, scene->mNumMaterials);
+		if (!textures.empty()) {
+			textures.clear();
+		}
+		LoadTextures(modelPath, scene->mMaterials, scene->mNumMaterials);
+
+		if (!meshes.empty()) {
+			meshes.clear();
+		}
 		LoadMeshes(scene->mMeshes, scene->mNumMeshes, program);
 	}
 	else {
@@ -26,12 +33,46 @@ void ModuleModels::Load(const char* modelPath) {
 	Load(modelPath, "vertex.glsl", "fragment.glsl");
 }
 
-void ModuleModels::LoadTextures(aiMaterial** const mMaterials, unsigned int mNumMaterials) {
+void ModuleModels::LoadTextures(const char* modelPath, aiMaterial** const mMaterials, unsigned int mNumMaterials) {
 	aiString file;
 	textures.reserve(mNumMaterials);
 	for (unsigned i = 0; i < mNumMaterials; ++i) {
 		if (mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, 0, &file) == AI_SUCCESS) {
-			textures.push_back(App->texture->LoadTexture(file.data));
+			unsigned int texture = App->texture->LoadTexture(file.data);
+
+			if (texture) {
+				textures.push_back(texture);
+			}
+			else {
+				char sourceDirectory[_MAX_DIR];
+				char sourceHarddrive[_MAX_DRIVE];
+				_splitpath_s(modelPath, sourceHarddrive, _MAX_DRIVE, sourceDirectory, _MAX_DIR, NULL, 0, NULL, 0);
+
+				char textureFilename[_MAX_FNAME];
+				char textureExtension[_MAX_EXT];
+				_splitpath_s(file.data, NULL, 0, NULL, 0, textureFilename, _MAX_FNAME, textureExtension, _MAX_EXT);
+
+				char texturePathFromSameLocationOfModel[_MAX_PATH];
+				_makepath_s(texturePathFromSameLocationOfModel, _MAX_PATH, sourceHarddrive, sourceDirectory, textureFilename, textureExtension);
+
+				texture = App->texture->LoadTexture(texturePathFromSameLocationOfModel);
+				if (texture) {
+					textures.push_back(texture);
+				}
+				else {
+					std::string texturePathFromAssetsDirectory = ".\\Assets\\Textures\\";
+					texturePathFromAssetsDirectory.append(textureFilename);
+					texturePathFromAssetsDirectory.append(textureExtension);
+
+					texture = App->texture->LoadTexture(texturePathFromAssetsDirectory.c_str());
+					if (texture) {
+						textures.push_back(texture);
+					}
+					else {
+						LOG("Could not find a texture");
+					}
+				}
+			}
 		}
 	}
 }

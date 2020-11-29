@@ -14,7 +14,7 @@ public:
 private:
 	void Load(const char* modelPath, const char* vertexShaderPath, const char* fragmentShaderPath);
 	void LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes, unsigned int program);
-	void LoadTextures(aiMaterial** const mMaterials, unsigned int mNumMaterials);
+	void LoadTextures(const char* modelPath, aiMaterial** const mMaterials, unsigned int mNumMaterials);
 	unsigned int CreateProgram(const char* vertexShaderPath, const char* fragmentShaderPath);
 
 private:

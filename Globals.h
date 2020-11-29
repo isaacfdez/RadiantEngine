@@ -4,7 +4,9 @@
 #include <stdio.h>
 #include <string>
 
-#define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
+#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+
+#define LOG(format, ...) log(__FILENAME__, __LINE__, format, __VA_ARGS__);
 #define DEGTORAD pi/180
 
 void log(const char file[], int line, const char* format, ...);

@@ -23,7 +23,10 @@ bool ModuleWindow::Init() {
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, flags);
+		SDL_DisplayMode desktopDisplay;
+		SDL_GetDesktopDisplayMode(0, &desktopDisplay);
+
+		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, desktopDisplay.w, desktopDisplay.h, flags);
 
 		if (window == NULL) {
 			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());

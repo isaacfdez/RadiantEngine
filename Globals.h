@@ -28,8 +28,6 @@ enum class KeyState {
 };
 
 // Configuration -----------
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 768
 #define SCREEN_SIZE 2
 #define FULLSCREEN false
 #define VSYNC true

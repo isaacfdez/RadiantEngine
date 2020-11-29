@@ -22,7 +22,7 @@ update_status ModuleInput::Update() {
 
 	mouseMotion = { 0, 0 };
 	mouseWheelMotion = 0;
-	memset(windowEvents, false, static_cast<unsigned int>(WindowEvent::kCount) * sizeof(bool));
+	memset(windowEvents, false, static_cast<unsigned int>(WindowEvent::COUNT) * sizeof(bool));
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
@@ -52,7 +52,7 @@ update_status ModuleInput::Update() {
 	while (SDL_PollEvent(&event) != 0) {
 		switch (event.type) {
 		case SDL_QUIT:
-			windowEvents[static_cast<unsigned int>(WindowEvent::kQuit)] = true;
+			windowEvents[static_cast<unsigned int>(WindowEvent::QUIT)] = true;
 			break;
 
 		case SDL_WINDOWEVENT:
@@ -60,14 +60,14 @@ update_status ModuleInput::Update() {
 			case SDL_WINDOWEVENT_HIDDEN:
 			case SDL_WINDOWEVENT_MINIMIZED:
 			case SDL_WINDOWEVENT_FOCUS_LOST:
-				windowEvents[static_cast<unsigned int>(WindowEvent::kHide)] = true;
+				windowEvents[static_cast<unsigned int>(WindowEvent::HIDE)] = true;
 				break;
 
 			case SDL_WINDOWEVENT_SHOWN:
 			case SDL_WINDOWEVENT_FOCUS_GAINED:
 			case SDL_WINDOWEVENT_MAXIMIZED:
 			case SDL_WINDOWEVENT_RESTORED:
-				windowEvents[static_cast<unsigned int>(WindowEvent::kShow)] = true;
+				windowEvents[static_cast<unsigned int>(WindowEvent::SHOW)] = true;
 				break;
 			}
 			break;
@@ -103,7 +103,7 @@ update_status ModuleInput::Update() {
 		
 	}
 
-	if (GetWindowEvent(WindowEvent::kQuit) == true || GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
+	if (GetWindowEvent(WindowEvent::QUIT) == true || GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
 		return update_status::UPDATE_STOP;
 
 	return update_status::UPDATE_CONTINUE;

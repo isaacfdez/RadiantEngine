@@ -23,7 +23,7 @@ public:
 	const float2& GetMouseMotion() const { return mouseMotion; }
 
 private:
-	bool windowEvents[static_cast<unsigned int>(WindowEvent::kCount)];
+	bool windowEvents[static_cast<unsigned int>(WindowEvent::COUNT)];
 	KeyState keyboard[MAX_KEYS] = { KeyState::KEY_IDLE};
 	KeyState mouseButtons[NUM_MOUSE_BUTTONS] = { KeyState::KEY_IDLE };
 	float2 mouseMotion = { 0, 0 };

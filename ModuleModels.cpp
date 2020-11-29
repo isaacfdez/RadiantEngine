@@ -22,6 +22,7 @@ void ModuleModels::Load(const char* modelPath, const char* vertexShaderPath, con
 			meshes.clear();
 		}
 		LoadMeshes(scene->mMeshes, scene->mNumMeshes, program);
+		LOG("Model loaded.")
 	}
 	else {
 		LOG("Error loading %s: %s", modelPath, aiGetErrorString());
@@ -30,6 +31,7 @@ void ModuleModels::Load(const char* modelPath, const char* vertexShaderPath, con
 }
 
 void ModuleModels::Load(const char* modelPath) {
+	LOG("Loading model in path %s...", modelPath);
 	Load(modelPath, "vertex.glsl", "fragment.glsl");
 }
 
@@ -38,10 +40,12 @@ void ModuleModels::LoadTextures(const char* modelPath, aiMaterial** const mMater
 	textures.reserve(mNumMaterials);
 	for (unsigned i = 0; i < mNumMaterials; ++i) {
 		if (mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, 0, &file) == AI_SUCCESS) {
+			LOG("Looking for texture %s...", file.data)
 			unsigned int texture = App->texture->LoadTexture(file.data);
 
 			if (texture) {
 				textures.push_back(texture);
+				LOG("Texture %s found in %s", file.data, modelPath);
 			}
 			else {
 				char sourceDirectory[_MAX_DIR];
@@ -58,6 +62,7 @@ void ModuleModels::LoadTextures(const char* modelPath, aiMaterial** const mMater
 				texture = App->texture->LoadTexture(texturePathFromSameLocationOfModel);
 				if (texture) {
 					textures.push_back(texture);
+					LOG("Texture %s found in %s", file.data, texturePathFromSameLocationOfModel);
 				}
 				else {
 					std::string texturePathFromAssetsDirectory = ".\\Assets\\Textures\\";
@@ -67,6 +72,7 @@ void ModuleModels::LoadTextures(const char* modelPath, aiMaterial** const mMater
 					texture = App->texture->LoadTexture(texturePathFromAssetsDirectory.c_str());
 					if (texture) {
 						textures.push_back(texture);
+						LOG("Texture %s found in %s", file.data, texturePathFromAssetsDirectory.c_str());
 					}
 					else {
 						LOG("Could not find a texture");

@@ -1,11 +1,15 @@
 #pragma once
+
 #include <windows.h>
 #include <stdio.h>
+#include <string>
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
 #define DEGTORAD pi/180
 
 void log(const char file[], int line, const char* format, ...);
+
+extern std::string logs;
 
 enum class update_status {
 	UPDATE_CONTINUE = 1,
@@ -14,10 +18,10 @@ enum class update_status {
 };
 
 enum class WindowEvent {
-	kQuit = 0,
-	kHide,
-	kShow,
-	kCount
+	QUIT = 0,
+	HIDE,
+	SHOW,
+	COUNT
 };
 
 enum class KeyState {

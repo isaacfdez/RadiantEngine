@@ -1,4 +1,5 @@
 #include "ModuleEditor.h"
+#include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
@@ -49,14 +50,20 @@ update_status ModuleEditor::Update() {
 
     if (consoleEnabled) {
         if (ImGui::Begin("Console")) {
-
+            ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+            ImGui::TextUnformatted(logs.c_str());
+            if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+            {
+                ImGui::SetScrollHereY(1.0f);
+            }
+            ImGui::EndChild();
         }
         ImGui::End();
     }
 
     if (configEnabled) {
         if (ImGui::Begin("Configuration")) {
-
+            
         }
         ImGui::End();
     }

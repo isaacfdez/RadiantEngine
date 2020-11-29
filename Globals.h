@@ -8,8 +8,12 @@
 #define DEGTORAD pi/180
 
 void log(const char file[], int line, const char* format, ...);
+void logFPS(float deltaTime);
 
 extern std::string logs;
+extern int FPSIndex;
+extern float logsFPS[];
+extern float logsMiliseconds[];
 
 enum class update_status {
 	UPDATE_CONTINUE = 1,

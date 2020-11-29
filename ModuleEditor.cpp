@@ -63,7 +63,13 @@ update_status ModuleEditor::Update() {
 
     if (configEnabled) {
         if (ImGui::Begin("Configuration")) {
-            
+            if (ImGui::CollapsingHeader("FPS Graph")) {
+                char title[25];
+                sprintf_s(title, 25, "Framerate %.1f", logsFPS[FPSIndex]);
+                ImGui::PlotHistogram("##framerate", &logsFPS[0], 100, FPSIndex, title, 0.0f, 100.0f, ImVec2(310, 100));
+                sprintf_s(title, 25, "Miliseconds %.1f", logsMiliseconds[FPSIndex]);
+                ImGui::PlotHistogram("##miliseconds", &logsMiliseconds[0], 100, FPSIndex, title, 0.0f, 40.0f, ImVec2(310, 100));
+            }
         }
         ImGui::End();
     }

@@ -17,4 +17,17 @@ void log(const char file[], int line, const char* format, ...)
 	logs.append(tmp_string2);
 }
 
+void logFPS(float deltaTime) {
+	float FPS = 1000.0f / deltaTime;
+	FPSIndex--;
+	if (FPSIndex < 0) {
+		FPSIndex = 99;
+	}
+	logsFPS[FPSIndex] = FPS;
+	logsMiliseconds[FPSIndex] = deltaTime * 1000.0f;
+}
+
 std::string logs;
+int FPSIndex = 99;
+float logsFPS[100] = { 0 };
+float logsMiliseconds[100] = { 0 };

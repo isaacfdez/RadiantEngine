@@ -42,6 +42,7 @@ bool Application::Init() {
 update_status Application::Update() {
 	float currentTime = SDL_GetTicks();
 	deltaTime = (currentTime - previousTime) / 1000;
+	logFPS(deltaTime);
 	previousTime = currentTime;
 
 	update_status ret = update_status::UPDATE_CONTINUE;

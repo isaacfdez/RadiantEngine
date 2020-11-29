@@ -12,8 +12,18 @@ public:
 
 	bool CleanUp() override;
 
-	float4x4 GetProjectionMatrix();
-	float4x4 GetViewMatrix();
+	float4x4 GetProjectionMatrix() const;
+	float4x4 GetViewMatrix() const;
+	vec GetFront() const;
+	vec GetUp() const;
+	vec GetPosition() const;
+	float GetNearPlane() const;
+	float GetFarPlane() const;
+	float GetFOV() const;
+	float GetAspectRatio() const;
+	float GetMovementSpeed() const;
+	float GetRotationSpeed() const;
+	float GetZoomSpeed() const;
 
 private:
 	void Rotate(float3x3 rotationMatrix);

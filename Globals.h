@@ -35,9 +35,15 @@ enum class KeyState {
 	KEY_UP
 };
 
+enum class WindowMode {
+	WINDOW,
+	BORDERLESS,
+	FULLSCREEN,
+	DESKTOP
+};
+
 // Configuration -----------
 #define SCREEN_SIZE 2
-#define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Radiant Engine"
 #define AUTHORS "Isaac Fernandez Fontao"

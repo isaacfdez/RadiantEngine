@@ -83,10 +83,60 @@ bool ModuleCamera::CleanUp() {
     return true;
 }
 
-float4x4 ModuleCamera::GetProjectionMatrix() {
+float4x4 ModuleCamera::GetProjectionMatrix() const {
     return frustum.ProjectionMatrix();
 }
 
-float4x4 ModuleCamera::GetViewMatrix() {
+float4x4 ModuleCamera::GetViewMatrix() const {
     return frustum.ViewMatrix();
+}
+
+vec ModuleCamera::GetFront() const
+{
+    return frustum.Front();
+}
+
+vec ModuleCamera::GetUp() const
+{
+    return frustum.Up();
+}
+
+vec ModuleCamera::GetPosition() const
+{
+    return frustum.Pos();
+}
+
+float ModuleCamera::GetNearPlane() const
+{
+    return frustum.NearPlaneDistance();
+}
+
+float ModuleCamera::GetFarPlane() const
+{
+    return frustum.FarPlaneDistance();
+}
+
+float ModuleCamera::GetFOV() const
+{
+    return frustum.VerticalFov();
+}
+
+float ModuleCamera::GetAspectRatio() const
+{
+    return frustum.AspectRatio();
+}
+
+float ModuleCamera::GetMovementSpeed() const
+{
+    return movementSpeed;
+}
+
+float ModuleCamera::GetRotationSpeed() const
+{
+    return rotationSpeed;
+}
+
+float ModuleCamera::GetZoomSpeed() const
+{
+    return zoomSpeed;
 }

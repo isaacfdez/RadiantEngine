@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
+#include "ModuleCamera.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_opengl3.h"
 #include "ImGui/imgui_impl_sdl.h"
@@ -124,6 +125,68 @@ update_status ModuleEditor::Update() {
                 SDL_version version;
                 SDL_VERSION(&version);
                 ImGui::TextColored(purple, "%i.%i.%i", version.major, version.minor, version.patch);
+            }
+            if (ImGui::CollapsingHeader("Window")) {
+                const char* windowModes[] = { "Window", "Borderless", "Fullscreen", "Desktop" };
+                const char* currentMode = windowModes[int(App->window->GetWindowMode())];
+                if (ImGui::BeginCombo("Window Mode", currentMode)) {
+                    for (int i = 0; i < IM_ARRAYSIZE(windowModes); ++i) {
+                        bool selected = (currentMode == windowModes[i]);
+                        if (ImGui::Selectable(windowModes[i], selected)) {
+                            App->window->SetWindowMode(WindowMode(i));
+                        }
+                        if (selected) {
+                            ImGui::SetItemDefaultFocus();
+                        }
+                    }
+                    ImGui::EndCombo();
+                }
+
+                if (App->window->GetWindowMode() == WindowMode::WINDOW || App->window->GetWindowMode() == WindowMode::BORDERLESS) {
+                    bool resizable = App->window->GetResizable();
+                    if (ImGui::Checkbox("Resizable", &resizable)) {
+                        App->window->SetResizable(resizable);
+                    }
+                    if (resizable) {
+                        int width = App->window->GetWidth();
+                        int height = App->window->GetHeight();
+                        bool sizeChanged = false;
+                        ImGui::SliderInt("Width", &width, 720, 3840);
+                        if (ImGui::IsItemDeactivatedAfterEdit()) {
+                            sizeChanged = true;
+                        }
+                        ImGui::SliderInt("Height", &height, 480, 2160);
+                        if (ImGui::IsItemDeactivatedAfterEdit()) {
+                            sizeChanged = true;
+                        }
+                        if (sizeChanged) {
+                            App->window->SetSize(width, height);
+                        }
+                    }
+                }
+            }
+
+            if (ImGui::CollapsingHeader("Camera")) {
+                vec front = App->camera->GetFront();
+                vec up = App->camera->GetUp();
+                vec position = App->camera->GetPosition();
+                float nearPlane = App->camera->GetNearPlane();
+                float farPlane = App->camera->GetFarPlane();
+                float FOV = App->camera->GetFOV();
+                float aspectRatio = App->camera->GetAspectRatio();
+                float movementSpeed = App->camera->GetMovementSpeed();
+                float rotationSpeed = App->camera->GetRotationSpeed();
+                float zoomSpeed = App->camera->GetZoomSpeed();
+                ImGui::InputFloat3("Front", front.ptr(), "%.3f");
+                ImGui::InputFloat3("Up", up.ptr(), "%.3f");
+                ImGui::InputFloat3("Position", position.ptr());
+                ImGui::InputFloat("Near Plane", &nearPlane);
+                ImGui::InputFloat("Far Plane", &farPlane);
+                ImGui::InputFloat("FOV", &FOV);
+                ImGui::InputFloat("Aspect Ratio", &aspectRatio);
+                ImGui::InputFloat("Movement Speed", &movementSpeed);
+                ImGui::InputFloat("Rotation Speed", &rotationSpeed);
+                ImGui::InputFloat("Zoom Speed", &zoomSpeed);
             }
         }
         ImGui::End();

@@ -4,6 +4,7 @@
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "ModuleCamera.h"
+#include "ModuleModels.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_opengl3.h"
 #include "ImGui/imgui_impl_sdl.h"
@@ -13,6 +14,9 @@
 #include "GL/glew.h"
 #include "assimp/version.h"
 #include "il.h"
+#include "Math/float3.h"
+#include "Math/float3x3.h"
+#include "Math/float4x4.h"
 
 
 static ImVec4 purple = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);
@@ -212,7 +216,57 @@ update_status ModuleEditor::Update() {
 
     if (propertiesEnabled) {
         if (ImGui::Begin("Properties")) {
+            if (ImGui::CollapsingHeader("Transformation")) {
+                float4x4 modelMatrix = App->model->GetModelMatrix();
+                float3 position = modelMatrix.TranslatePart();
+                float3 rotation = modelMatrix.RotatePart().ToEulerXYZ();
+                float3 scale = modelMatrix.ExtractScale();
+                ImGui::InputFloat3("Position", position.ptr(), "%.3f");
+                ImGui::InputFloat3("Rotation", rotation.ptr(), "%.3f");
+                ImGui::InputFloat3("Scale", scale.ptr(), "%.3f");
+            }
 
+            if (ImGui::CollapsingHeader("Geometry")) {
+                std::vector<Mesh> meshes = App->model->GetMeshes();
+                for (unsigned int i = 0; i < meshes.size(); ++i) {
+                    char meshName[32];
+                    sprintf_s(meshName, "Mesh %i", i);
+                    if (ImGui::TreeNode(meshName)) {
+                        ImGui::Text("Vertices:");
+                        ImGui::SameLine();
+                        ImGui::TextColored(purple, "%i", meshes[i].GetVertices());
+                        ImGui::Text("Triangles:");
+                        ImGui::SameLine();
+                        ImGui::TextColored(purple, "%i", meshes[i].GetTriangles());
+                        ImGui::Text("Faces:");
+                        ImGui::SameLine();
+                        ImGui::TextColored(purple, "%i", meshes[i].GetFaces());
+                        ImGui::TreePop();
+                    }
+                }
+            }
+
+            if (ImGui::CollapsingHeader("Textures")) {
+                std::vector<unsigned int> textures = App->model->GetTextures();
+                for (unsigned int i = 0; i < textures.size(); ++i) {
+                    char textureName[32];
+                    sprintf_s(textureName, "Texture %i", i);
+                    if (ImGui::TreeNode(textureName)) {
+                        int width, height;
+                        glGetTextureLevelParameteriv(textures[i], 0, GL_TEXTURE_WIDTH, &width);
+                        glGetTextureLevelParameteriv(textures[i], 0, GL_TEXTURE_HEIGHT, &height);
+                        ImGui::Image((ImTextureID)textures[i], ImVec2(128, 128));
+                        ImGui::Text("Texture dimensions");
+                        ImGui::Text("Width");
+                        ImGui::SameLine();
+                        ImGui::TextColored(purple, "%i", width);
+                        ImGui::Text("Height");
+                        ImGui::SameLine();
+                        ImGui::TextColored(purple, "%i", height);
+                        ImGui::TreePop();
+                    }
+                }
+            }
         }
         ImGui::End();
     }

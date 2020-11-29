@@ -30,6 +30,7 @@ void Mesh::LoadVBO(const aiMesh* mesh) {
 
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	numVertices = mesh->mNumVertices;
+	numFaces = mesh->mNumFaces;
 }
 
 void Mesh::LoadEBO(const aiMesh* mesh) {
@@ -69,15 +70,14 @@ void Mesh::CreateVAO() {
 	glBindVertexArray(0);
 }
 
-void Mesh::Draw(const std::vector<unsigned>& textures) {
+void Mesh::Draw(const std::vector<unsigned>& textures, const float4x4 modelMatrix) {
 
 	float4x4 proj = App->camera->GetProjectionMatrix();
 	float4x4 view = App->camera->GetViewMatrix();
-	float4x4 model = float4x4::identity;
 
 	glUseProgram(program);
 
-	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, (const float*)&model);
+	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, (const float*)&modelMatrix);
 	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, (const float*)&view);
 	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, (const float*)&proj);
 
@@ -90,4 +90,24 @@ void Mesh::Draw(const std::vector<unsigned>& textures) {
 	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr);
 
 	glBindVertexArray(0);
+}
+
+unsigned int Mesh::GetIndices() const
+{
+	return numIndices;
+}
+
+unsigned int Mesh::GetVertices() const
+{
+	return numVertices;
+}
+
+unsigned int Mesh::GetTriangles() const
+{
+	return numVertices/3;
+}
+
+unsigned int Mesh::GetFaces() const
+{
+	return numFaces;
 }

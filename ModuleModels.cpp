@@ -105,18 +105,25 @@ unsigned int ModuleModels::CreateProgram(const char* vertexShaderPath, const cha
 	return program;
 }
 
-unsigned int ModuleModels::GetNumVertices() {
-	unsigned int total_vertices = 0;
-	for (unsigned int i = 0; i < meshes.size(); i++) {
-		total_vertices += meshes[i].numIndices;
-	}
-	return total_vertices;
+float4x4 ModuleModels::GetModelMatrix() const
+{
+	return modelMatrix;
+}
+
+std::vector<Mesh> ModuleModels::GetMeshes() const
+{
+	return meshes;
+}
+
+std::vector<unsigned int> ModuleModels::GetTextures() const
+{
+	return textures;
 }
 
 void ModuleModels::LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes, unsigned int program) {
 	meshes.reserve(mNumMeshes);
 
-	for (unsigned int i = 0; i < mNumMeshes; i++) {
+	for (unsigned int i = 0; i < mNumMeshes; ++i) {
 		meshes.push_back(Mesh(program));
 		meshes[i].LoadVBO(mMeshes[i]);
 		meshes[i].LoadEBO(mMeshes[i]);
@@ -125,8 +132,9 @@ void ModuleModels::LoadMeshes(aiMesh** const mMeshes, unsigned int mNumMeshes, u
 }
 
 void ModuleModels::Draw() {
-	for (unsigned int i = 0; i < meshes.size(); i++) {
-		meshes[i].Draw(textures);
+	modelMatrix = float4x4::identity;
+	for (unsigned int i = 0; i < meshes.size(); ++i) {
+		meshes[i].Draw(textures, modelMatrix);
 	}
 }
 

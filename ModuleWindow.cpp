@@ -92,7 +92,7 @@ int ModuleWindow::GetHeight() const {
 }
 
 bool ModuleWindow::GetResizable() const {
-	return (SDL_GetWindowFlags(window) && SDL_WINDOW_RESIZABLE) != 0;
+	return (SDL_GetWindowFlags(window) & SDL_WINDOW_RESIZABLE) != 0;
 }
 
 void ModuleWindow::SetResizable(bool resizable) {

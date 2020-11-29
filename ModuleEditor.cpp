@@ -6,6 +6,11 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_opengl3.h"
 #include "ImGui/imgui_impl_sdl.h"
+#include "SDL_version.h"
+#include "SDL_cpuinfo.h"
+#include "SDL_video.h"
+#include "GL/glew.h"
+
 
 static ImVec4 purple = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);
 
@@ -69,6 +74,39 @@ update_status ModuleEditor::Update() {
                 ImGui::PlotHistogram("##framerate", &logsFPS[0], 100, FPSIndex, title, 0.0f, 100.0f, ImVec2(310, 100));
                 sprintf_s(title, 25, "Miliseconds %.1f", logsMiliseconds[FPSIndex]);
                 ImGui::PlotHistogram("##miliseconds", &logsMiliseconds[0], 100, FPSIndex, title, 0.0f, 40.0f, ImVec2(310, 100));
+            }
+
+            if (ImGui::CollapsingHeader("Hardware Information")) {
+                ImGui::Text("Number of CPUs:");
+                ImGui::SameLine();
+                ImGui::TextColored(purple, "%i", SDL_GetCPUCount());
+                ImGui::Text("RAM Memory:");
+                ImGui::SameLine();
+                ImGui::TextColored(purple, "%.1f Gb", SDL_GetSystemRAM() / 1000.0f);
+                ImGui::Text("GPU Vendor:");
+                ImGui::SameLine();
+                ImGui::TextColored(purple, "%s", (const char*)glGetString(GL_VENDOR));
+                ImGui::Text("GPU Model:");
+                ImGui::SameLine();
+                ImGui::TextColored(purple, "%s", (const char*)glGetString(GL_RENDERER));
+                ImGui::Text("GPU OpenGL Version:");
+                ImGui::SameLine();
+                ImGui::TextColored(purple, "%s", (const char*)glGetString(GL_VERSION));
+                ImGui::Text("VRAM Available:");
+                ImGui::SameLine();
+                int vramAvailable;
+                glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &vramAvailable);
+                ImGui::TextColored(purple, "%.1f Mb", vramAvailable / 1000.0f);
+                ImGui::Text("VRAM Budget:");
+                ImGui::SameLine();
+                int vramBudget;
+                glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &vramBudget);
+                ImGui::TextColored(purple, "%.1f Mb", vramBudget / 1000.0f);
+                ImGui::Text("VRAM Usage:");
+                ImGui::SameLine();
+                int vramUsage = vramBudget - vramAvailable ;
+                ImGui::TextColored(purple, "%.1f Mb", vramUsage / 1000.0f);
+
             }
         }
         ImGui::End();

@@ -10,6 +10,8 @@
 #include "SDL_cpuinfo.h"
 #include "SDL_video.h"
 #include "GL/glew.h"
+#include "assimp/version.h"
+#include "il.h"
 
 
 static ImVec4 purple = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);
@@ -106,7 +108,22 @@ update_status ModuleEditor::Update() {
                 ImGui::SameLine();
                 int vramUsage = vramBudget - vramAvailable ;
                 ImGui::TextColored(purple, "%.1f Mb", vramUsage / 1000.0f);
-
+            }
+            if(ImGui::CollapsingHeader("Libraries' Version")){
+                ImGui::Text("Assimp:");
+                ImGui::SameLine();
+                ImGui::TextColored(purple, "%i.%i.%i", aiGetVersionMajor(), aiGetVersionMinor(), aiGetVersionRevision());
+                ImGui::Text("DevIL:");
+                ImGui::SameLine();
+                ImGui::TextColored(purple, "%i.%i.%i", IL_VERSION / 100, (IL_VERSION % 100) / 10, IL_VERSION & 10);
+                ImGui::Text("GLEW:");
+                ImGui::SameLine();
+                ImGui::TextColored(purple, "%i.%i.%i", GLEW_VERSION_MAJOR, GLEW_VERSION_MINOR, GLEW_VERSION_MICRO);
+                ImGui::Text("SDL:");
+                ImGui::SameLine();
+                SDL_version version;
+                SDL_VERSION(&version);
+                ImGui::TextColored(purple, "%i.%i.%i", version.major, version.minor, version.patch);
             }
         }
         ImGui::End();

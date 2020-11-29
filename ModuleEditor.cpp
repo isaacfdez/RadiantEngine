@@ -114,7 +114,7 @@ update_status ModuleEditor::Update() {
                 int vramUsage = vramBudget - vramAvailable ;
                 ImGui::TextColored(purple, "%.1f Mb", vramUsage / 1000.0f);
             }
-            if(ImGui::CollapsingHeader("Libraries' Version")){
+            if(ImGui::CollapsingHeader("Libraries' Versions")){
                 ImGui::Text("Assimp:");
                 ImGui::SameLine();
                 ImGui::TextColored(purple, "%i.%i.%i", aiGetVersionMajor(), aiGetVersionMinor(), aiGetVersionRevision());

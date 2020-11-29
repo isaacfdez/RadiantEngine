@@ -34,7 +34,7 @@ void ModuleModels::Load(const char* modelPath) {
 	char extension[_MAX_EXT];
 	_splitpath_s(modelPath, NULL, 0, NULL, 0, NULL, 0, extension, _MAX_EXT);
 
-	if (strcmp(extension, ".fbx") == 0) {
+	if (strcmp(extension, ".fbx") == 0 || strcmp(extension, ".FBX") == 0) {
 		LOG("Loading model in path %s...", modelPath);
 		Load(modelPath, "vertex.glsl", "fragment.glsl");
 	}

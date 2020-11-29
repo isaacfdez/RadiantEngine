@@ -33,6 +33,6 @@ private:
 	float movementSpeed = 5.0f;
 	float rotationSpeed = 25.0f;
 	float zoomSpeed = 5.0f;
-
+	float distanceFocus = 10.0f;
 };
 

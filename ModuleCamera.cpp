@@ -1,6 +1,7 @@
 #include "ModuleCamera.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleModels.h"
 #include "SDL.h"
 #include "Math/float3x3.h"
 #include "Math/Quat.h"
@@ -72,7 +73,11 @@ update_status ModuleCamera::Update() {
         frustum.SetUp(float3::unitY);
     }
     else if (App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT) {
-
+        float3 oldFocusPoint = frustum.Pos() + (frustum.Front() * distanceFocus);
+        Rotate(float3x3::RotateAxisAngle(frustum.WorldRight().Normalized(), -mouseMotion.y * rotationSpeed * DEGTORAD * deltaTime));
+        Rotate(float3x3::RotateY(-mouseMotion.x * rotationSpeed * DEGTORAD * deltaTime));
+        float3 newFocusPoint = frustum.Pos() + (frustum.Front() * distanceFocus);
+        frustum.SetPos((oldFocusPoint - newFocusPoint) + frustum.Pos());
     }
 
     return update_status::UPDATE_CONTINUE;

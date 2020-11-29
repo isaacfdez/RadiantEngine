@@ -71,6 +71,9 @@ update_status ModuleCamera::Update() {
         frustum.SetFront(float3::unitZ);
         frustum.SetUp(float3::unitY);
     }
+    else if (App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT) {
+
+    }
 
     return update_status::UPDATE_CONTINUE;
 }

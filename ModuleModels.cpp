@@ -31,8 +31,25 @@ void ModuleModels::Load(const char* modelPath, const char* vertexShaderPath, con
 }
 
 void ModuleModels::Load(const char* modelPath) {
-	LOG("Loading model in path %s...", modelPath);
-	Load(modelPath, "vertex.glsl", "fragment.glsl");
+	char extension[_MAX_EXT];
+	_splitpath_s(modelPath, NULL, 0, NULL, 0, NULL, 0, extension, _MAX_EXT);
+
+	if (strcmp(extension, ".fbx") == 0) {
+		LOG("Loading model in path %s...", modelPath);
+		Load(modelPath, "vertex.glsl", "fragment.glsl");
+	}
+	else if (strcmp(extension, ".png") == 0 || strcmp(extension, ".dds") == 0 || strcmp(extension, ".jpg") == 0 || strcmp(extension, ".jpeg") == 0 || strcmp(extension, ".tga") == 0) {
+		LOG("Loading texture %s", modelPath);
+
+		unsigned int texture = App->texture->LoadTexture(modelPath);
+		if (texture) {
+			if (!textures.empty()) {
+				textures.clear();
+			}
+			textures.push_back(texture);
+			LOG("Texture loaded.");
+		}
+	}
 }
 
 void ModuleModels::LoadTextures(const char* modelPath, aiMaterial** const mMaterials, unsigned int mNumMaterials) {
